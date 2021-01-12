@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>React Counter</title>
+
+    <style>
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      button {
+        margin: 0.5rem;
+      }
+      .special {
+        color: red;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
@@ -30,7 +45,7 @@
           super(props);
 
           this.state = {
-            count: 0,
+            count: props.initialCount || 0,
           };
         }
 
@@ -47,13 +62,29 @@
               count: state.count - 1,
             }));
         };
+        resetCount = (event) => {
+          this.setState({
+            count: this.props.initialCount || 0,
+          });
+        };
 
         render() {
+          let countClassName = "";
+          if (this.state.count >= 10) {
+            countClassName = "special";
+          }
+          let resetButton = "";
+
+          if (this.state.count !== this.props.initialCount) {
+            resetButton = <button onClick={this.resetCount}>reset</button>;
+          }
+
           return (
             <div>
-              <button onClick={this.handleDecrement}>-</button>
-              <span>{this.state.count}</span>
-              <button onClick={this.handleIncrement}> +</button>
+              <button onClick={this.handleDecrement}>(-)</button>
+              <span className={countClassName}>{this.state.count}</span>
+              <button onClick={this.handleIncrement}>(+)</button>
+              <div>{resetButton}</div>
             </div>
           );
         }
@@ -61,7 +92,10 @@
 
       let element = <Counter />;
 
-      ReactDOM.render(element, document.getElementById("root"));
+      ReactDOM.render(
+        <Counter initialCount={0} />,
+        document.getElementById("root")
+      );
     </script>
   </body>
 </html>
